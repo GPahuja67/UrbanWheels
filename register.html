@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Urban Wheels - Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #030B1E, #0A1436);
+    }
+
+    .signup-container {
+      display: flex;
+      width: 850px;
+      background: #0D1B36;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .form-section {
+      flex: 1;
+      padding: 60px 40px;
+      color: white;
+    }
+
+    .form-section h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #00D1FF;
+    }
+
+    .form-section input {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 8px;
+      background: #0F2A4D;
+      color: white;
+      font-size: 16px;
+    }
+
+    .form-section input::placeholder {
+      color: #aaa;
+    }
+
+    .form-section button {
+      width: 100%;
+      padding: 12px;
+      background: #00D1FF;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .form-section button:hover {
+      background: #00A9CC;
+    }
+
+    #register-message {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+      height: 20px;
+    }
+
+    .welcome-section {
+      flex: 1;
+      background: linear-gradient(135deg, #001f33, #005577);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      color: white;
+    }
+
+    .welcome-section img {
+      width: 200px;
+      margin-bottom: 20px;
+      border-radius: 50%;
+    }
+
+    .welcome-section h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #00D1FF;
+    }
+
+    .welcome-section p {
+      font-size: 14px;
+      color: #bbb;
+    }
+
+    .welcome-section a {
+      color: #00D1FF;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .welcome-section a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="signup-container">
+    <div class="form-section">
+      <h2>Create Account</h2>
+      <form onsubmit="return handleRegister(event)">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <div id="register-message"></div>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+    <div class="welcome-section">
+      <img src="urbanwheels_logo.png" alt="Urban Wheels Logo" />
+      <h1>Hello There!</h1>
+      Already a member? <a href="login.html" class="text-blue-400 hover:underline">Sign in</a>
+    </div>
+  </div>
+
+  <script>
+    async function handleRegister(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const messageBox = document.getElementById('register-message');
+
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          messageBox.innerText = "Registered successfully!";
+          messageBox.style.color = "#00FFAA";
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1500);
+        } else {
+          messageBox.innerText = data.message || "Registration failed";
+          messageBox.style.color = "#FF4F4F";
+        }
+      } catch (err) {
+        console.error("Register error:", err);
+        messageBox.innerText = "Server error. Try again.";
+        messageBox.style.color = "#FF4F4F";
+      }
+
+      return false;
+    }
+  </script>
+</body>
+</html>

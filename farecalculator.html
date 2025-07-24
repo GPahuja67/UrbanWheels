@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fare Calculator - UrbanWheels</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* All your existing CSS here... unchanged */
+    .stars {
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: twinkle 60s linear infinite;
+      z-index: -10;
+    }
+    @keyframes twinkle {
+      0% { background-position: 0 0; }
+      100% { background-position: -1000px 1000px; }
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0b0f1a url('https://i.imgur.com/3ZQ3ZbL.png') repeat;
+      background-size: cover;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      flex-direction: column;
+    }
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      z-index: 10;
+    }
+    .logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,123,255,0.3);
+    }
+    .wallet {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background-color: #1a1f2e;
+      padding: 10px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.4);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      z-index: 50;
+    }
+    .wallet:hover {
+      background-color: #22304a;
+    }
+    .wallet span {
+      color: #00ffcc;
+      font-weight: bold;
+    }
+    .wallet-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      height: 100%;
+      width: 320px;
+      background-color: #1c2436;
+      box-shadow: -4px 0 20px rgba(0, 255, 255, 0.2);
+      padding: 25px;
+      z-index: 1000;
+      transition: right 0.4s ease;
+    }
+    .wallet-drawer.open {
+      right: 0;
+    }
+    .wallet-drawer h3 {
+      text-align: center;
+      color: #00ffff;
+      margin-bottom: 20px;
+    }
+    .wallet-drawer label {
+      font-size: 14px;
+      color: #aaa;
+      margin-top: 10px;
+      display: block;
+    }
+    .wallet-drawer input {
+      width: 100%;
+      margin-top: 5px;
+      background: #293448;
+      padding: 10px;
+      border-radius: 8px;
+      color: white;
+      border: none;
+    }
+    .wallet-drawer button {
+      background-color: #00bfff;
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .wallet-drawer .close-btn {
+      text-align: center;
+      margin-top: 15px;
+      color: #ccc;
+      cursor: pointer;
+    }
+    .wallet-drawer .close-btn:hover {
+      color: #fff;
+    }
+    .container {
+      background: rgba(20, 26, 43, 0.95);
+      padding: 50px;
+      border-radius: 25px;
+      box-shadow: 0 0 25px rgba(0, 123, 255, 0.2);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      margin-top: 120px;
+    }
+    h2 {
+      margin-bottom: 30px;
+      color: #00bfff;
+      font-size: 28px;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 20px;
+      display: block;
+      text-align: left;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background-color: #1e2436;
+      color: #fff;
+      box-shadow: inset 0 0 5px rgba(0, 123, 255, 0.1);
+    }
+    .fare-button {
+      width: 100%;
+      padding: 14px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: bold;
+      margin-top: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .fare-button:hover {
+      background: #0056b3;
+    }
+    .fare-output {
+      margin-top: 25px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #00ff88;
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+
+  <!-- Background Stars -->
+  <div class="fixed inset-0 stars -z-10 opacity-60 brightness-125"></div>
+
+  <!-- Logo -->
+  <div class="logo">
+    <img src="urbanwheels_logo.png" alt="UrbanWheels Logo">
+  </div>
+<!-- Menu Toggle Button (can be placed anywhere, like top right) -->
+<button id="menuToggle" class="fixed top-5 right-5 z-50 bg-[#19376D] text-white px-3 py-2 rounded-lg shadow-lg hover:bg-blue-600">
+  ☰ Menu
+</button>
+
+<!-- Slide-in Side Menu -->
+<div id="sideMenu" class="fixed top-0 right-0 h-full w-64 bg-[#0f172a] shadow-2xl text-white transform translate-x-full transition-transform duration-300 ease-in-out z-40">
+  <div class="p-6">
+    <h2 class="text-lg font-bold text-blue-400 mb-6">Quick Links</h2>
+    <ul class="space-y-4 text-sm">
+      <li><a href="admin-dashboard.html" class="hover:text-blue-300">📊 Dashboard</a></li>
+      <li><a href="booking.html" class="hover:text-blue-300">🛺 My Bookings</a></li>
+      <li><a href="#" class="hover:text-blue-300">📅 Booking History</a></li>
+      <li><a href="farecalculator.html" class="hover:text-blue-300">💰 Fare Calculator</a></li>
+      <li><a href="#" class="hover:text-blue-300">📝 Reviews</a></li>
+      <li><a href="login.html" class="hover:text-red-400">🚪 Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+  <!-- Wallet Button -->
+  <div class="wallet" onclick="toggleWallet(true)">
+    💰 Wallet: ₹<span id="walletBalance">450</span>
+  </div>
+
+  <!-- Wallet Drawer -->
+  <div class="wallet-drawer" id="walletDrawer">
+    <h3>Wallet Balance: ₹<span id="walletBalanceDrawer">450</span></h3>
+    <label>UPI ID</label>
+    <input type="text" id="upiId" placeholder="example@upi" />
+    <label>Amount to Add</label>
+    <input type="number" id="addAmount" placeholder="Enter amount" />
+    <button onclick="addMoney()">Add Money</button>
+    <div class="close-btn" onclick="toggleWallet(false)">✖ Close</div>
+  </div>
+
+  <!-- Fare Calculator -->
+  <div class="container">
+    <h2>Fare Calculator</h2>
+    <label for="pickup">Pickup Location</label>
+    <input type="text" id="pickup" placeholder="Enter pickup location" />
+    <label for="drop">Drop Location</label>
+    <input type="text" id="drop" placeholder="Enter drop location" />
+    <label for="type">Ride Type</label>
+    <select id="type">
+      <option value="standard">Standard</option>
+      <option value="premium">Premium</option>
+      <option value="suv">SUV</option>
+    </select>
+    <button class="fare-button" onclick="calculateFare()"> Calculate Fare</button>
+    <div class="fare-output" id="fareResult"></div>
+  </div>
+
+  <script>
+    let walletBalance = 450;
+    function calculateFare() {
+      const pickup = document.getElementById("pickup").value.trim();
+      const drop = document.getElementById("drop").value.trim();
+      const type = document.getElementById("type").value;
+      if (!pickup || !drop) {
+        alert("Please enter both pickup and drop locations.");
+        return;
+      }
+      const baseFare = 50;
+      const distance = Math.floor(Math.random() * 10) + 1;
+      let ratePerKm = type === "premium" ? 15 : type === "suv" ? 20 : 10;
+      const totalFare = baseFare + distance * ratePerKm;
+      document.getElementById("fareResult").textContent =
+        `Estimated Fare: ₹${totalFare} (for approx ${distance} km)`;
+    }
+
+    function toggleWallet(open) {
+      const drawer = document.getElementById("walletDrawer");
+      if (open) {
+        drawer.classList.add("open");
+        document.getElementById("walletBalanceDrawer").textContent = walletBalance;
+      } else {
+        drawer.classList.remove("open");
+      }
+    }
+
+    function addMoney() {
+      const upiId = document.getElementById("upiId").value.trim();
+      const amount = parseInt(document.getElementById("addAmount").value);
+      if (!upiId || !upiId.includes("@")) {
+        alert("Enter a valid UPI ID (example@upi)");
+        return;
+      }
+      if (!amount || amount <= 0) {
+        alert("Enter a valid amount");
+        return;
+      }
+      walletBalance += amount;
+      document.getElementById("walletBalance").textContent = walletBalance;
+      document.getElementById("walletBalanceDrawer").textContent = walletBalance;
+      document.getElementById("upiId").value = "";
+      document.getElementById("addAmount").value = "";
+      alert(`₹${amount} added to your wallet via UPI!`);
+    }
+  
+  const menu = document.getElementById('sideMenu');
+  const toggle = document.getElementById('menuToggle');
+
+  toggle.addEventListener('click', () => {
+    if (menu.classList.contains('translate-x-full')) {
+      menu.classList.remove('translate-x-full');
+      menu.classList.add('translate-x-0');
+    } else {
+      menu.classList.remove('translate-x-0');
+      menu.classList.add('translate-x-full');
+    }
+  });
+
+
+  </script>
+</body>
+</html>

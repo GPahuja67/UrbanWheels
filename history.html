@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Bookings - UrbanWheels</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f172a;
+      color: white;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 255, 255, 0.1);
+    }
+    .status {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .confirmed { background-color: #00c853; color: #fff; }
+    .cancelled { background-color: #d50000; color: #fff; }
+    .completed { background-color: #2196f3; color: #fff; }
+  </style>
+</head>
+<body class="p-6">
+
+  <!-- Navbar -->
+  <nav class="bg-[#0f172a]/90 py-4 px-10 mb-6 shadow-md flex justify-between items-center text-white fixed top-0 left-0 w-full z-40">
+    <h1 class="text-xl font-bold text-cyan-400">UrbanWheels</h1>
+    <div class="flex gap-4">
+      <a href="home.html" class="hover:text-cyan-400">Home</a>
+      <a href="booking.html" class="hover:text-cyan-400">Book Ride</a>
+      <a href="fare-calculator.html" class="hover:text-cyan-400">Fare Calculator</a>
+      <button onclick="handleLogout()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="pt-24 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-semibold text-cyan-300 mb-6 text-center">My Bookings</h2>
+
+    <div id="loginBox" class="bg-[#1e293b] p-6 rounded-xl max-w-sm mx-auto mb-8 hidden">
+      <h3 class="text-xl font-semibold mb-4 text-center">Login Required</h3>
+      <form id="loginForm" class="space-y-4">
+        <input type="email" id="email" placeholder="Email" class="w-full px-4 py-2 rounded bg-[#0f172a] text-white border border-gray-600" required />
+        <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 rounded bg-[#0f172a] text-white border border-gray-600" required />
+        <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-600 py-2 rounded font-medium">Login</button>
+        <p id="loginError" class="text-red-500 text-sm mt-2 text-center hidden">Invalid credentials.</p>
+      </form>
+    </div>
+
+    <div class="space-y-6" id="bookingContainer">
+      <!-- Bookings will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    function handleLogout() {
+      localStorage.removeItem('userId');
+      alert("Logged out!");
+      window.location.href = 'home.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userId = localStorage.getItem('userId');
+
+      if (!userId) {
+        document.getElementById('loginBox').classList.remove('hidden');
+        return;
+      }
+
+      loadBookings(userId);
+    });
+
+    async function loadBookings(userId) {
+      try {
+        const res = await fetch(`http://localhost:5000/api/rides/user/${userId}`);
+        const bookings = await res.json();
+        const container = document.getElementById('bookingContainer');
+
+        if (!Array.isArray(bookings) || bookings.length === 0) {
+          container.innerHTML = '<p class="text-center text-gray-400">No bookings found.</p>';
+          return;
+        }
+
+        container.innerHTML = bookings.map(b => `
+          <div class="card">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-lg font-semibold">
+                🚖 Pickup: <span class="text-cyan-300">${b.pickup || 'N/A'}</span> →
+                Drop: <span class="text-cyan-300">${b.drop || 'N/A'}</span>
+              </div>
+              <span class="status confirmed">${b.status || 'Confirmed'}</span>
+            </div>
+            <div class="text-sm text-gray-300">Date: ${b.date || 'N/A'} | Time: ${b.time || 'N/A'}</div>
+            <div class="text-sm text-gray-400 mt-1">Fare: ₹${b.fare}</div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error('Error loading bookings:', err);
+        document.getElementById('bookingContainer').innerHTML = '<p class="text-center text-red-500">Error loading bookings.</p>';
+      }
+    }
+
+    // Login form handler
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+          const res = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            const loginError = document.getElementById('loginError');
+            loginError.textContent = data.message || 'Login failed';
+            loginError.classList.remove('hidden');
+          } else {
+            localStorage.setItem('userId', data.userId);
+            alert('Login successful!');
+            location.reload();
+          }
+        } catch (err) {
+          const loginError = document.getElementById('loginError');
+          loginError.textContent = 'Server error.';
+          loginError.classList.remove('hidden');
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

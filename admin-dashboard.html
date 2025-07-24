@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UrbanWheels Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0b0f1a url('https://www.transparenttextures.com/patterns/stardust.png');
+      color: #fff;
+      min-height: 100vh;
+    }
+    .card {
+      background: #1a2133;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="p-6">
+
+<!-- ✅ Clean Sidebar Toggle Button -->
+<button id="menuToggle" class="fixed top-6 left-6 z-50 bg-[#0f172a] border border-blue-500 text-blue-300 px-3 py-2 rounded-md hover:bg-[#19376D] transition duration-300">
+  ☰
+</button>
+
+
+<!-- ✅ Slide-in Left Side Menu -->
+<div id="sideMenu" class="fixed top-0 left-0 h-full w-64 bg-[#0f172a] shadow-2xl text-white transform -translate-x-full transition-transform duration-300 ease-in-out z-40">
+  <div class="p-6">
+    <h2 class="text-lg font-bold text-blue-400 mb-6">Quick Links</h2>
+    <ul class="space-y-4 text-sm">
+      <li><a href="admin-dashboard.html" class="hover:text-blue-300">📊 Dashboard</a></li>
+      <li><a href="booking.html" class="hover:text-blue-300">🛺 My Bookings</a></li>
+      <li><a href="#" class="hover:text-blue-300">📅 Booking History</a></li>
+      <li><a href="farecalculator.html" class="hover:text-blue-300">💰 Fare Calculator</a></li>
+      <li><a href="#" class="hover:text-blue-300">📝 Reviews</a></li>
+      <li><a href="login.html" class="hover:text-red-400">🚪 Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+
+
+<div class="main-content transition-all duration-300"></div>
+  <!-- Navbar -->
+  <nav class="bg-[#0f172a]/90 p-4 rounded-lg shadow-lg flex justify-between items-center mb-10">
+    <div class="text-xl font-semibold text-blue-400">UrbanWheels Admin Panel</div>
+    <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium">Logout</button>
+  </nav>
+
+  <!-- Cards Row 1 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">Total Rides</h2>
+      <p class="text-2xl font-bold text-green-400">1,245</p>
+    </div>
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">Total Users</h2>
+      <p class="text-2xl font-bold text-yellow-400">980</p>
+    </div>
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">Revenue</h2>
+      <p class="text-2xl font-bold text-blue-400">₹2.3L</p>
+    </div>
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">Active Drivers</h2>
+      <p class="text-2xl font-bold text-purple-400">64</p>
+    </div>
+  </div>
+
+  <!-- Cards Row 2 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">Avg. Rating</h2>
+      <p class="text-2xl font-bold text-yellow-300">4.6 ⭐</p>
+    </div>
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">Total Reviews</h2>
+      <p class="text-2xl font-bold text-green-300">2,410</p>
+    </div>
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">Cancellation Rate</h2>
+      <p class="text-2xl font-bold text-red-400">3.2%</p>
+    </div>
+    <div class="card text-center">
+      <h2 class="text-lg font-semibold mb-2">System Status</h2>
+      <p class="text-2xl font-bold text-green-400">✅ Operational</p>
+    </div>
+  </div>
+
+  <!-- Ride Requests Table -->
+  <div class="card mb-10 overflow-x-auto">
+    <h3 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">All Ride Requests</h3>
+    <table class="w-full text-sm text-left text-white">
+      <thead class="bg-[#19376D] text-white uppercase text-xs">
+        <tr>
+          <th class="px-4 py-3">Pickup</th>
+          <th class="px-4 py-3">Drop</th>
+          <th class="px-4 py-3">Fare</th>
+          <th class="px-4 py-3">Seats</th>
+          <th class="px-4 py-3">Date</th>
+          <th class="px-4 py-3">Time</th>
+          <th class="px-4 py-3">Status</th>
+        </tr>
+      </thead>
+      <tbody id="rideTableBody" class="bg-[#1a2133]">
+        <!-- Ride data will load here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="card mb-10">
+    <h3 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">Recent Reviews</h3>
+    <ul class="space-y-3 text-sm">
+      <li class="border-b border-gray-700 pb-2">
+        <p class="text-yellow-300 font-medium">Riya ⭐⭐⭐⭐⭐</p>
+        <p class="text-gray-300">“Smooth ride, polite driver and on time!”</p>
+      </li>
+      <li class="border-b border-gray-700 pb-2">
+        <p class="text-yellow-300 font-medium">Arjun ⭐⭐⭐⭐</p>
+        <p class="text-gray-300">“Comfortable but driver took a longer route.”</p>
+      </li>
+      <li>
+        <p class="text-yellow-300 font-medium">Sana ⭐⭐⭐⭐⭐</p>
+        <p class="text-gray-300">“Perfect experience, love UrbanWheels!”</p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-500 text-sm mt-8">
+    <hr class="border-gray-700 mb-4"/>
+    © 2025 UrbanWheels. All rights reserved. | Admin Panel v2.1
+  </footer>
+</div>
+  <!-- Fetch Ride Data -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/rides/all');
+        const rides = await response.json();
+        const tableBody = document.getElementById('rideTableBody');
+
+        if (rides.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-400">No rides available.</td></tr>`;
+          return;
+        }
+
+        rides.forEach(ride => {
+          const row = document.createElement('tr');
+          row.classList.add("border-b", "border-gray-700", "hover:bg-[#19376D]");
+
+          row.innerHTML = `
+            <td class="px-4 py-2">${ride.pickupLocation}</td>
+            <td class="px-4 py-2">${ride.dropLocation}</td>
+            <td class="px-4 py-2">₹${ride.fare}</td>
+            <td class="px-4 py-2">${ride.seats}</td>
+            <td class="px-4 py-2">${ride.date || '-'}</td>
+            <td class="px-4 py-2">${ride.time || '-'}</td>
+            <td class="px-4 py-2 text-green-400">${ride.status}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        console.error('Error loading rides:', err);
+      }
+    });
+  </script>
+<script>
+  const menu = document.getElementById('sideMenu');
+  const toggle = document.getElementById('menuToggle');
+
+  toggle.addEventListener('click', () => {
+    menu.classList.toggle('-translate-x-full');
+    menu.classList.toggle('translate-x-0');
+  });
+</script>
+
+
+
+</body>
+</html>

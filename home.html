@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UrbanWheels Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #050505);
+      overflow-x: hidden;
+    }
+    .stars {
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: twinkle 60s linear infinite;
+      z-index: -10;
+    }
+    @keyframes twinkle {
+      0% { background-position: 0 0; }
+      100% { background-position: -1000px 1000px; }
+    }
+  </style>
+</head>
+<body class="text-white h-screen overflow-y-scroll snap-y snap-mandatory">
+
+  <!-- Background Stars -->
+  <div class="fixed inset-0 stars -z-10 opacity-60 brightness-125"></div>
+
+  <!-- Logo -->
+  <div class="absolute top-2 left-4 z-50">
+    <img src="urbanwheels_logo.png" class="h-40 w-40 object-cover rounded-full" />
+  </div>
+
+  <!-- Navbar -->
+  <nav class="w-full bg-[#0f172a]/90 py-4 pl-52 pr-10 fixed top-0 z-40 flex justify-end gap-6 items-center text-white shadow-md">
+    <a href="#" class="text-blue-400 font-semibold hover:underline">Welcome</a>
+    <a href="#trending" class="hover:text-blue-400 font-medium">Trending Rides</a>
+    <a href="booking.html" class="hover:text-blue-400 font-medium">Book Ride</a>
+    <a href="farecalculator.html" class="hover:text-blue-400 font-medium">Fare Calculator</a>
+    <a href="/login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">Login</a>
+    <a href="register.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">Register</a>
+  </nav>
+<!-- Menu Toggle Button (can be placed anywhere, like top right) -->
+<button id="menuToggle" class="fixed top-5 right-5 z-50 bg-[#19376D] text-white px-3 py-2 rounded-lg shadow-lg hover:bg-blue-600">
+  ☰ Menu
+</button>
+
+<!-- Slide-in Side Menu -->
+<div id="sideMenu" class="fixed top-0 right-0 h-full w-64 bg-[#0f172a] shadow-2xl text-white transform translate-x-full transition-transform duration-300 ease-in-out z-40">
+  <div class="p-6">
+    <h2 class="text-lg font-bold text-blue-400 mb-6">Quick Links</h2>
+    <ul class="space-y-4 text-sm">
+      <li><a href="admin-dashboard.html" class="hover:text-blue-300">📊 Dashboard</a></li>
+      <li><a href="booking.html" class="hover:text-blue-300">🛺 My Bookings</a></li>
+      <li><a href="#" class="hover:text-blue-300">📅 Booking History</a></li>
+      <li><a href="farecalculator.html" class="hover:text-blue-300">💰 Fare Calculator</a></li>
+      <li><a href="#" class="hover:text-blue-300">📝 Reviews</a></li>
+      <li><a href="login.html" class="hover:text-red-400">🚪 Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+  <!-- Banner Section -->
+  <section id="bookride" class="relative z-10 bg-[#0f172a]/80 text-center py-40 mt-16 snap-start min-h-screen">
+    <h1 class="text-5xl font-bold mb-4 text-blue-400 animate-fade-in">Welcome to UrbanWheels!</h1>
+    <p class="text-lg text-gray-300 mb-6">Book your cab easily and explore trending rides with style 🚘</p>
+
+    <!-- Book Now Button -->
+    <div class="flex justify-center mt-6">
+      <button id="bookNowBtn" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-full text-white text-lg font-semibold transition flex items-center gap-2">
+        🚀 Book Now
+      </button>
+    </div>
+  </section>
+
+  <!-- Trending Rides Section -->
+  <section id="trending" class="min-h-screen pt-40 px-6 bg-[#111827]/90 snap-start scroll-mt-24">
+    <h2 class="text-3xl font-semibold mb-10 text-center text-blue-400 mt-50">Trending Rides</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <!-- Ride Card 1 -->
+<div class="bg-[#1f2937]/80 p-6 rounded-2xl shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300">
+  <img src="chd-del.png" alt="Delhi to Chandigarh" class="rounded-lg mb-10 h-30 w-full object-cover">
+  <h3 class="font-bold text-xl mb-1 text-white">Delhi → Chandigarh</h3>
+  <p class="text-gray-400">Most booked ride this week</p>
+  <p class="text-blue-300 font-semibold mt-2">Starting at ₹1,499</p>
+  <button onclick="window.location.href='booking.html?pickup=Delhi&drop=Chandigarh'" class="block w-full mt-4 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition">Book Now</button>
+</div>
+
+<!-- Ride Card 2 -->
+<div class="bg-[#1f2937]/80 p-6 rounded-2xl shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300">
+  <img src="mumb-pun.png" alt="Mumbai to Pune" class="rounded-lg mb-10 h-30 w-full object-cover">
+  <h3 class="font-bold text-xl mb-1 text-white">Mumbai → Pune</h3>
+  <p class="text-gray-400">Fastest cab service route</p>
+  <p class="text-blue-300 font-semibold mt-2">Starting at ₹999</p>
+  <button onclick="window.location.href='booking.html?pickup=Mumbai&drop=Pune'" class="block w-full mt-4 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition">Book Now</button>
+</div>
+
+<!-- Ride Card 3 -->
+<div class="bg-[#1f2937]/80 p-6 rounded-2xl shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300">
+  <img src="ban-mys.png" alt="Bangalore to Mysore" class="rounded-lg mb-10 h-25 w-full object-cover">
+  <h3 class="font-bold text-xl mb-1 text-white">Bangalore → Mysore</h3>
+  <p class="text-gray-400">Most scenic route</p>
+  <p class="text-blue-300 font-semibold mt-2">Starting at ₹1,299</p>
+  <button onclick="window.location.href='booking.html?pickup=Bangalore&drop=Mysore'" class="block w-full mt-4 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition">Book Now</button>
+</div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0a0a]/90 text-gray-400 p-6 text-center border-t border-gray-700">
+    <p>&copy; 2025 <span class="text-blue-400">UrbanWheels</span>. All rights reserved.</p>
+  </footer>
+
+  <!-- Script to make Book Now button work -->
+  <script>
+    document.getElementById("bookNowBtn").addEventListener("click", () => {
+      window.location.href = "pages/booking.html";
+    });
+    
+  const menu = document.getElementById('sideMenu');
+  const toggle = document.getElementById('menuToggle');
+
+  toggle.addEventListener('click', () => {
+    if (menu.classList.contains('translate-x-full')) {
+      menu.classList.remove('translate-x-full');
+      menu.classList.add('translate-x-0');
+    } else {
+      menu.classList.remove('translate-x-0');
+      menu.classList.add('translate-x-full');
+    }
+  });
+
+
+  </script>
+</body>
+</html>

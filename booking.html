@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Ride - UrbanWheels</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+  
+  #sideMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    background-color: #0f172a;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 40;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+  }
+
+  #sideMenu.show {
+    transform: translateX(0);
+  }
+
+  /* Body gets pushed when menu is open */
+  .main-content.shifted {
+    margin-left: 240px;
+  }
+
+  #menuToggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 50;
+    background-color: #19376D;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  </style>
+</head>
+
+<body class="bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white min-h-screen">
+
+ <!-- Hoverable Wrapper -->
+<div class="group fixed top-0 left-0 w-full z-50">
+  <!-- Small hover area -->
+  <div class="h-4 bg-transparent"></div>
+
+  <!-- Actual Navbar (hidden until hover) -->
+  <nav class="bg-[#0f172a]/90 py-4 px-10 translate-y-[-100%] group-hover:translate-y-0 transition-all duration-300 ease-in-out shadow-md flex justify-end items-center gap-6 text-white">
+    <a href="home.html" class="text-blue-400 font-semibold hover:underline">Welcome</a>
+    <a href="#trending" class="hover:text-blue-400 font-medium">Trending Rides</a>
+    <a href="booking.html" class="hover:text-blue-400 font-medium">Book Ride</a>
+    <a href="/fare-calculator.html" class="hover:text-blue-400 font-medium">Fare Calculator</a>
+    <a href="/login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">Login</a>
+    <a href="register.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">Register</a>
+  </nav>
+</div>
+<!-- Menu Toggle Button (can be placed anywhere, like top right) -->
+<button id="menuToggle" class="fixed top-5 right-5 z-50 bg-[#19376D] text-white px-3 py-2 rounded-lg shadow-lg hover:bg-blue-600">
+  ☰ Menu
+</button>
+
+<!-- Slide-in Side Menu -->
+<div id="sideMenu" class="fixed top-0 right-0 h-full w-64 bg-[#0f172a] shadow-2xl text-white transform translate-x-full transition-transform duration-300 ease-in-out z-40">
+  <div class="p-6">
+    <h2 class="text-lg font-bold text-blue-400 mb-6">Quick Links</h2>
+    <ul class="space-y-4 text-sm">
+      <li><a href="admin-dashboard.html" class="hover:text-blue-300">📊 Dashboard</a></li>
+      <li><a href="booking.html" class="hover:text-blue-300">🛺 My Bookings</a></li>
+      <li><a href="#" class="hover:text-blue-300">📅 Booking History</a></li>
+      <li><a href="farecalculator.html" class="hover:text-blue-300">💰 Fare Calculator</a></li>
+      <li><a href="#" class="hover:text-blue-300">📝 Reviews</a></li>
+      <li><a href="login.html" class="hover:text-red-400">🚪 Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+  <!-- Main Grid -->
+  <div class="grid grid-cols-12 gap-6 p-6 ">
+    <!-- Map -->
+    <div class="glass col-span-7 rounded-2xl p-4 shadow-xl h-[430px]">
+      <h2 class="text-xl font-semibold mb-4">Live Map</h2>
+      <div id="map" class="w-full h-full rounded-xl"></div>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="glass col-span-5 rounded-2xl p-6 shadow-xl h-[430px] overflow-y-auto">
+      <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">🚖 Book Your Ride</h2>
+      <form class="space-y-4 text-sm" id="rideForm">
+        <input type="text" id="pickup" placeholder="Pickup Location"
+          class="w-full p-3 rounded-md bg-[#334155]/60 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
+
+        <input type="text" id="drop" placeholder="Drop Location"
+          class="w-full p-3 rounded-md bg-[#334155]/60 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
+
+        <div class="flex gap-4">
+          <input type="date" id="rideDate"
+            class="w-1/2 p-3 rounded-md bg-[#334155]/60 text-white focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
+          <input type="time" id="rideTime"
+            class="w-1/2 p-3 rounded-md bg-[#334155]/60 text-white focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
+        </div>
+
+        <div class="flex gap-4 items-center">
+          <div class="w-1/2 relative">
+            <input type="number" id="fareInput" value="100"
+              class="w-full p-3 pr-10 rounded-md bg-[#334155]/60 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
+            <button type="button" onclick="incrementFare()" title="Add ₹10"
+              class="absolute right-2 top-[10px] bg-[#38bdf8] px-2 py-1 rounded-md text-sm hover:bg-[#0ea5e9] transition">+10</button>
+          </div>
+
+          <select id="seats"
+            class="w-1/2 p-3 rounded-md bg-[#334155]/60 text-white focus:outline-none focus:ring-2 focus:ring-[#38bdf8]">
+            <option disabled selected>Seats</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+        </div>
+
+        <button type="submit"
+          class="w-full mt-3 bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] text-white py-3 rounded-lg hover:opacity-90 transition font-semibold tracking-wide">Confirm Ride</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Available Rides -->
+  <div class="p-6">
+    <h2 class="text-xl font-semibold mb-4">Available Rides</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Card Template -->
+      <div class="glass p-4 rounded-xl shadow-xl hover:scale-[1.02] transition-transform duration-200">
+        <h3 class="text-lg font-bold">Ride 1 - Honda City</h3>
+        <p>Driver: Rahul Singh</p>
+        <p>From: Sector 22</p>
+        <p>To: Elante Mall</p>
+        <p>ETA: 10 mins</p>
+        <p class="text-green-400 font-semibold mt-2">Fare: ₹180</p>
+        <button class="mt-3 px-4 py-2 bg-[#38bdf8] rounded-full hover:bg-[#0ea5e9] transition">Book Now</button>
+      </div>
+      <div class="glass p-4 rounded-xl shadow-xl hover:scale-[1.02] transition-transform duration-200">
+        <h3 class="text-lg font-bold">Ride 2 - Swift Dzire</h3>
+        <p>Driver: Meena Kumari</p>
+        <p>From: PGI</p>
+        <p>To: ISBT 43</p>
+        <p>ETA: 8 mins</p>
+        <p class="text-green-400 font-semibold mt-2">Fare: ₹140</p>
+        <button class="mt-3 px-4 py-2 bg-[#38bdf8] rounded-full hover:bg-[#0ea5e9] transition">Book Now</button>
+      </div>
+      <div class="glass p-4 rounded-xl shadow-xl hover:scale-[1.02] transition-transform duration-200">
+        <h3 class="text-lg font-bold">Ride 3 - Alto</h3>
+        <p>Driver: Aman Verma</p>
+        <p>From: Phase 7</p>
+        <p>To: Chitkara Univ.</p>
+        <p>ETA: 12 mins</p>
+        <p class="text-green-400 font-semibold mt-2">Fare: ₹220</p>
+        <button class="mt-3 px-4 py-2 bg-[#38bdf8] rounded-full hover:bg-[#0ea5e9] transition">Book Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function incrementFare() {
+      const fareInput = document.getElementById('fareInput');
+      let currentFare = parseInt(fareInput.value) || 0;
+      fareInput.value = currentFare + 10;
+    }
+
+    document.getElementById('rideForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const pickup = document.getElementById('pickup').value.trim();
+      const drop = document.getElementById('drop').value.trim();
+      const fare = parseInt(document.getElementById('fareInput').value);
+      const seats = parseInt(document.getElementById('seats').value);
+      const date = document.getElementById('rideDate').value;
+      const time = document.getElementById('rideTime').value;
+
+      if (!pickup || !drop || !fare || !seats || !date || !time) {
+        alert("Please fill all fields properly.");
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/rides/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pickup, drop, fare, seats, date, time })
+        });
+
+        const data = await res.json();
+        alert(data.message || 'Booking Failed');
+      } catch (err) {
+        alert("Server error. Check if backend is running.");
+        console.error(err);
+      }
+    });
+  </script>
+<script>
+  // Auto-fill pickup and drop from URL
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pickup = urlParams.get('pickup');
+    const drop = urlParams.get('drop');
+
+    if (pickup) document.getElementById('pickup').value = pickup;
+    if (drop) document.getElementById('drop').value = drop;
+  });
+
+</script>
+
+  <!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pickup = urlParams.get('pickup');
+    const drop = urlParams.get('drop');
+
+    if (pickup) document.getElementById('pickup').value = pickup;
+    if (drop) document.getElementById('drop').value = drop;
+
+    // Ride route coordinates
+    const locations = {
+      'Delhi-Chandigarh': { lat: 30.7333, lng: 76.7794, fare: 1499 },
+      'Mumbai-Pune': { lat: 18.5204, lng: 73.8567, fare: 999 },
+      'Bangalore-Mysore': { lat: 12.2958, lng: 76.6394, fare: 1299 }
+    };
+
+    const key = `${pickup}-${drop}`;
+    const route = locations[key] || { lat: 30.7333, lng: 76.7794, fare: 100 };
+
+    // Set map
+    const map = L.map('map').setView([route.lat, route.lng], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+    }).addTo(map);
+
+    L.marker([route.lat, route.lng])
+      .addTo(map)
+      .bindPopup(`${pickup || 'Pickup'} → ${drop || 'Drop'}`)
+      .openPopup();
+
+    // Autofill fare input
+    document.getElementById('fareInput').value = route.fare;
+  });
+</script>
+<script>
+  const menu = document.getElementById('sideMenu');
+  const toggle = document.getElementById('menuToggle');
+
+  toggle.addEventListener('click', () => {
+    if (menu.classList.contains('translate-x-full')) {
+      menu.classList.remove('translate-x-full');
+      menu.classList.add('translate-x-0');
+    } else {
+      menu.classList.remove('translate-x-0');
+      menu.classList.add('translate-x-full');
+    }
+  });
+</script>
+const userId = localStorage.getItem('userId'); // 🔐 Get from localStorage
+
+const rideData = {
+  pickup,
+  drop,
+  fare,
+  seats,
+  date,
+  time,
+  userId               // 🔥 Send to backend
+};
+
+fetch('http://localhost:5000/api/rides/request', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(rideData)
+});
+
+
+
+</body>
+
+</html>
